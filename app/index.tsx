@@ -1,11 +1,12 @@
 import {StatusBar} from 'expo-status-bar';
-import {FlatList, Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text} from 'react-native';
 import {useEffect, useState} from "react";
-import {Character} from "./Character";
 import {SafeAreaView} from "react-native-safe-area-context";
-import CharacterCard from "./CharacterCard";
+import {Character} from "../Character";
+import CharacterCard from "../CharacterCard";
+import {Link} from "expo-router";
 
-export default function App() {
+export default function Index() {
 
     const [data, setData] = useState<Character[]>([]);
     // console.log(data)
@@ -23,11 +24,15 @@ export default function App() {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.myTest}>Open up App.tsx to start working on your app!</Text>
+            <Link href="/character/1">
+                <Text>Character Details</Text>
+            </Link>
             <FlatList
                 data={data}
                 ListHeaderComponent={<Text style={styles.myTest}>Header</Text>}
                 keyExtractor={(item) => item.id}
-                renderItem={(element) => <CharacterCard character={element.item}/>}
+                renderItem={(element) => <
+                    CharacterCard character={element.item}/>}
             />
             {/*<ScrollView>*/}
             {/*    {*/}
