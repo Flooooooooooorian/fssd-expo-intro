@@ -1,9 +1,11 @@
 import {Text, TextInput, Image, StyleSheet, KeyboardAvoidingView, Platform, Pressable} from "react-native";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import * as ImagePicker from "expo-image-picker";
+import {AuthContext} from "../AuthContext";
 
 export default function CreateCharacter() {
 
+    const {login} = useContext(AuthContext);
     const [value, setValue] = useState<string>();
     const [image, setImage] = useState<string>();
     const permissions = ImagePicker.useCameraPermissions();
@@ -40,6 +42,9 @@ export default function CreateCharacter() {
                 </Text>
             </Pressable>
             <Image source={{uri: image}} style={{height: 100, width: 100}}/>
+            <Pressable onPress={() => {login("Florian")}}>
+                <Text>Login</Text>
+            </Pressable>
         </KeyboardAvoidingView>
 
     )

@@ -1,15 +1,29 @@
 import {StatusBar} from 'expo-status-bar';
 import {FlatList, StyleSheet, Text} from 'react-native';
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Character} from "../Character";
 import CharacterCard from "../CharacterCard";
 import {Link} from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStorage from 'expo-secure-store';
+import {AuthContext} from "../AuthContext";
 
 export default function Index() {
 
     const [data, setData] = useState<Character[]>([]);
-    // console.log(data)
+    const context = useContext(AuthContext)
+
+    console.log("context:", context.user)
+
+
+    useEffect(() => {
+        AsyncStorage.getItem("characters")
+            .then(value => {
+                var optionalParams = JSON.parse(value);
+                console.log("AsyncStorage", optionalParams)
+            })
+    }, []);
 
     useEffect(() => {
         console.log("Render")
@@ -18,6 +32,7 @@ export default function Index() {
             .then(response => response.json())
             .then(json => {
                 setData(json.results);
+                AsyncStorage.setItem("characters", JSON.stringify(json.results))
             })
     }, []);
 
