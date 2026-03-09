@@ -1,5 +1,6 @@
 import {createContext, useEffect, useState} from "react";
 import {Character} from "./Character";
+import  * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStorage from "expo-secure-store";
 
 type AuthContextType = {
@@ -18,11 +19,25 @@ export default function AuthProvider({children}: {children: React.ReactNode}) {
 
     const [user, setUser] = useState<string>()
 
+    const handleAuthentication = async () => {
+        const hasHardware = await LocalAuthentication.hasHardwareAsync()
+        if (hasHardware) {
+            const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+            if (isEnrolled) {
+                const authentication = await LocalAuthentication.authenticateAsync();
+                if (authentication.success) {
+                    SecureStorage.getItemAsync("userToken")
+                        .then(token => {
+                            setUser(token!)
+                        })
+                }
+            }
+        }
+    }
+
+
     useEffect(() => {
-        SecureStorage.getItemAsync("userToken")
-            .then(token => {
-                setUser(token!)
-            })
+        handleAuthentication()
     }, []);
 
 
