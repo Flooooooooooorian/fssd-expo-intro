@@ -2,13 +2,17 @@ import {Text, TextInput, Image, StyleSheet, KeyboardAvoidingView, Platform, Pres
 import {useContext, useEffect, useState} from "react";
 import * as ImagePicker from "expo-image-picker";
 import {AuthContext} from "../AuthContext";
+import * as Location from 'expo-location';
 
 export default function CreateCharacter() {
 
     const {login} = useContext(AuthContext);
+    const [lcoation, setLocation] = useState<Location.LocationObject>();
+    const [locationPermissions, requestPermissions] = Location.useForegroundPermissions()
+
     const [value, setValue] = useState<string>();
     const [image, setImage] = useState<string>();
-    const permissions = ImagePicker.useCameraPermissions();
+    const cameraPermissions = ImagePicker.useCameraPermissions();
 
 
     const handleImagePicker = async () => {
@@ -28,6 +32,38 @@ export default function CreateCharacter() {
         }
     }
 
+    console.log(locationPermissions)
+
+    useEffect(() => {
+
+
+        Location.hasServicesEnabledAsync().then((result) => {
+                console.log(result)
+
+            })
+
+
+        Location.requestForegroundPermissionsAsync()
+            .then((permission) => {
+                console.log(permission)
+                if (permission.granted) {
+                    Location.getCurrentPositionAsync()
+                        .then((location) => {
+                            console.log(location)
+                        })
+                }
+            });
+
+
+        // const permissionResult = await Location.requestForegroundPermissionsAsync();
+        // if (permissionResult) {
+        //         const location = await Location.getCurrentPositionAsync();
+        //
+        //         console.log(location)
+        // }
+
+    }, []);
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : "height"}>
             <TextInput value={value}
@@ -41,8 +77,11 @@ export default function CreateCharacter() {
                     Image
                 </Text>
             </Pressable>
-            <Image source={{uri: image}} style={{height: 100, width: 100}}/>
-            <Pressable onPress={() => {login("Florian")}}>
+            <Image source={{uri: image}}
+                   style={{height: 100, width: 100}}/>
+            <Pressable onPress={() => {
+                login("Florian")
+            }}>
                 <Text>Login</Text>
             </Pressable>
         </KeyboardAvoidingView>

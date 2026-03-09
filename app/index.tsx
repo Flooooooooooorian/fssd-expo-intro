@@ -20,8 +20,7 @@ export default function Index() {
     useEffect(() => {
         AsyncStorage.getItem("characters")
             .then(value => {
-                var optionalParams = JSON.parse(value);
-                console.log("AsyncStorage", optionalParams)
+                console.log("AsyncStorage", value)
             })
     }, []);
 

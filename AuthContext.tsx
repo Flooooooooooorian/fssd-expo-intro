@@ -21,7 +21,7 @@ export default function AuthProvider({children}: {children: React.ReactNode}) {
     useEffect(() => {
         SecureStorage.getItemAsync("userToken")
             .then(token => {
-                setUser(token)
+                setUser(token!)
             })
     }, []);
 
